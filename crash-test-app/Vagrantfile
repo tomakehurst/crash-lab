@@ -1,0 +1,27 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+    (1..2).each do |n|
+        name = "node#{n}"
+        config.vm.define name do |host|
+            host.vm.hostname = name
+            host.vm.box = "centos64min"
+            host.vm.box_url = "https://github.com/2creatives/vagrant-centos/releases/download/v0.1.0/centos64-x86_64-20131030.box"
+
+            host.vm.network :private_network, ip: "192.168.2.1#{n}"
+
+            host.vm.synced_folder "../../breakbox", "/mnt/breakbox"
+            host.vm.synced_folder ".", "/mnt/crash-test"
+
+            host.vm.provider :virtualbox do |vb|
+                vb.customize ["modifyvm", :id, "--memory", "384"]
+            end
+
+            host.vm.provision "shell", path: "provision-#{n}.sh"
+        end
+    end
+end

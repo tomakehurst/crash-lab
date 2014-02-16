@@ -1,0 +1,198 @@
+{
+    "version": "3.0.0",
+    "gauges": {
+        "jvm.buffers.direct.capacity": {
+            "value": 24590
+        },
+        "jvm.buffers.direct.count": {
+            "value": 6
+        },
+        "jvm.buffers.direct.used": {
+            "value": 24663
+        },
+        "jvm.buffers.mapped.capacity": {
+            "value": 0
+        },
+        "jvm.buffers.mapped.count": {
+            "value": 0
+        },
+        "jvm.buffers.mapped.used": {
+            "value": 0
+        },
+        "jvm.gc.PS-MarkSweep.count": {
+            "value": 0
+        },
+        "jvm.gc.PS-MarkSweep.time": {
+            "value": 0
+        },
+        "jvm.gc.PS-Scavenge.count": {
+            "value": 6
+        },
+        "jvm.gc.PS-Scavenge.time": {
+            "value": 82
+        },
+        "jvm.memory.heap.committed": {
+            "value": 163774464
+        },
+        "jvm.memory.heap.init": {
+            "value": 133074368
+        },
+        "jvm.memory.heap.max": {
+            "value": 1893990400
+        },
+        "jvm.memory.heap.usage": {
+            "value": 0.01784053815689879
+        },
+        "jvm.memory.heap.used": {
+            "value": 33789808
+        },
+        "jvm.memory.non-heap.committed": {
+            "value": 27852800
+        },
+        "jvm.memory.non-heap.init": {
+            "value": 24313856
+        },
+        "jvm.memory.non-heap.max": {
+            "value": 136314880
+        },
+        "jvm.memory.non-heap.usage": {
+            "value": 0.19224119919996996
+        },
+        "jvm.memory.non-heap.used": {
+            "value": 26205336
+        },
+        "jvm.memory.pools.Code-Cache.usage": {
+            "value": 0.021418253580729168
+        },
+        "jvm.memory.pools.PS-Eden-Space.usage": {
+            "value": 0.03260890312573947
+        },
+        "jvm.memory.pools.PS-Old-Gen.usage": {
+            "value": 0.002671196925461361
+        },
+        "jvm.memory.pools.PS-Perm-Gen.usage": {
+            "value": 0.2922351185868426
+        },
+        "jvm.memory.pools.PS-Survivor-Space.usage": {
+            "value": 0.8509796830944549
+        },
+        "jvm.memory.total.committed": {
+            "value": 191627264
+        },
+        "jvm.memory.total.init": {
+            "value": 157388224
+        },
+        "jvm.memory.total.max": {
+            "value": 2030305280
+        },
+        "jvm.memory.total.used": {
+            "value": 59995144
+        },
+        "jvm.threads.blocked.count": {
+            "value": 2
+        },
+        "jvm.threads.count": {
+            "value": 26
+        },
+        "jvm.threads.daemon.count": {
+            "value": 7
+        },
+        "jvm.threads.deadlocks": {
+            "value": []
+        },
+        "jvm.threads.new.count": {
+            "value": 0
+        },
+        "jvm.threads.runnable.count": {
+            "value": 14
+        },
+        "jvm.threads.terminated.count": {
+            "value": 0
+        },
+        "jvm.threads.timed_waiting.count": {
+            "value": 8
+        },
+        "jvm.threads.waiting.count": {
+            "value": 2
+        },
+        "org.apache.http.conn.ClientConnectionManager.wiremock-client.available-connections": {
+            "value": 1
+        },
+        "org.apache.http.conn.ClientConnectionManager.wiremock-client.leased-connections": {
+            "value": 0
+        },
+        "org.apache.http.conn.ClientConnectionManager.wiremock-client.max-connections": {
+            "value": 1024
+        },
+        "org.apache.http.conn.ClientConnectionManager.wiremock-client.pending-connections": {
+            "value": 0
+        },
+        "org.eclipse.jetty.util.thread.QueuedThreadPool.dw.jobs": {
+            "value": 0
+        },
+        "org.eclipse.jetty.util.thread.QueuedThreadPool.dw.size": {
+            "value": 8
+        },
+        "org.eclipse.jetty.util.thread.QueuedThreadPool.dw.utilization": {
+            "value": 0.75
+        }
+    },
+    "counters": {},
+    "histograms": {},
+    "meters": {},
+    "timers": {
+        "io.dropwizard.jetty.MutableServletContextHandler.connect-requests": {},
+        "io.dropwizard.jetty.MutableServletContextHandler.delete-requests": {},
+        "io.dropwizard.jetty.MutableServletContextHandler.dispatches": {},
+        "io.dropwizard.jetty.MutableServletContextHandler.get-requests": {},
+        "io.dropwizard.jetty.MutableServletContextHandler.head-requests": {},
+        "io.dropwizard.jetty.MutableServletContextHandler.move-requests": {},
+        "io.dropwizard.jetty.MutableServletContextHandler.options-requests": {},
+        "io.dropwizard.jetty.MutableServletContextHandler.other-requests": {},
+        "io.dropwizard.jetty.MutableServletContextHandler.post-requests": {},
+        "io.dropwizard.jetty.MutableServletContextHandler.put-requests": {},
+        "io.dropwizard.jetty.MutableServletContextHandler.requests": {},
+        "io.dropwizard.jetty.MutableServletContextHandler.trace-requests": {},
+        "org.apache.http.client.HttpClient.wiremock-client.get-requests": {},
+        "org.eclipse.jetty.server.HttpConnectionFactory.8080.connections": {},
+        "org.eclipse.jetty.server.HttpConnectionFactory.8081.connections": {},
+        "webresources.bad-http-client-error-handling.timer": {
+            "count": 0,
+            "max": 0,
+            "mean": 0,
+            "min": 0,
+            "p50": 0,
+            "p75": 0,
+            "p95": 0,
+            "p98": 0,
+            "p99": 0,
+            "p999": 0,
+            "stddev": 0,
+            "m15_rate": 0,
+            "m1_rate": 0,
+            "m5_rate": 0,
+            "mean_rate": 0,
+            "duration_units": "seconds",
+            "rate_units": "calls/second"
+        },
+        "webresources.no-connect-timeout.timer": {
+            "count": 6,
+            "max": 0.112848,
+            "mean": 0.10592133333333334,
+            "min": 0.103812,
+            "p50": 0.104438,
+            "p75": 0.107589,
+            "p95": 0.112848,
+            "p98": 0.112848,
+            "p99": 0.112848,
+            "p999": 0.112848,
+            "stddev": 0.0034632659537879367,
+            "m15_rate": 0.07105935230074353,
+            "m1_rate": 0.006514282618324909,
+            "m5_rate": 0.018662468554401835,
+            "mean_rate": 0.10950670805241516,
+            "duration_units": "seconds",
+            "rate_units": "calls/second"
+        }
+    }
+}

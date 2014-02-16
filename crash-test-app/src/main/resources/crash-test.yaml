@@ -1,0 +1,16 @@
+server:
+  minThreads: 4
+  maxThreads: 20
+
+wireMockHost: 192.168.2.11
+
+clientConfig:
+  connectionTimeout: 2s
+  timeout: 30m
+  keepAlive: 10m
+
+metrics:
+  reporters:
+    - type: graphite
+      host: 192.168.2.21
+      port: 2003
