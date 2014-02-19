@@ -1,18 +1,25 @@
 package com.tomakehurst.crashlab.metrics;
 
-import com.fasterxml.
-import java.net.URI;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Map;
+
+import static com.google.common.base.Preconditions.checkArgument;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AppMetrics {
 
-    private final List<TimerSnapshot> timers;
+    private final Map<String, TimerSnapshot> timers;
 
-    public AppMetrics(@JsonProperty List<TimerSnapshot> timers) {
+    @JsonCreator
+    public AppMetrics(@JsonProperty("timers") Map<String, TimerSnapshot> timers) {
         this.timers = timers;
     }
 
     public TimerSnapshot timer(String name) {
-        return null;
+        checkArgument(timers.containsKey(name), "No timer found named " + name);
+        return timers.get(name);
     }
 }
