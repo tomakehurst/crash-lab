@@ -10,14 +10,20 @@ public abstract class HttpSteps implements Runnable {
 
     private final AsyncCompletionHandler<Response> completionHandler;
     private final AsyncHttpClient httpClient;
+    private final String name;
 
-    protected HttpSteps() {
-        this(new NoOpCompetionHandler(), new AsyncHttpClient());
+    protected HttpSteps(String name) {
+        this(name, new NoOpCompetionHandler(), new AsyncHttpClient());
     }
 
-    protected HttpSteps(AsyncCompletionHandler<Response> completionHandler, AsyncHttpClient httpClient) {
+    protected HttpSteps(String name, AsyncCompletionHandler<Response> completionHandler, AsyncHttpClient httpClient) {
         this.completionHandler = completionHandler;
         this.httpClient = httpClient;
+        this.name = name;
+    }
+
+    public String name() {
+        return name;
     }
 
     @Override
@@ -29,7 +35,5 @@ public abstract class HttpSteps implements Runnable {
         }
     }
 
-    protected abstract String name();
-
-    protected abstract void run(AsyncHttpClient http, AsyncCompletionHandler<Response> completionHandler) throws IOException;
+    public abstract void run(AsyncHttpClient http, AsyncCompletionHandler<Response> completionHandler) throws IOException;
 }
