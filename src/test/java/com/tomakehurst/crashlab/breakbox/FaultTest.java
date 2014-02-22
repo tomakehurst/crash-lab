@@ -58,4 +58,22 @@ public class FaultTest {
             json, NON_EXTENSIBLE);
     }
 
+    @Test
+    public void delay_with_minimal_params_generates_correct_json() throws Exception {
+        Delay delay = new Delay(null, "my-delay", Fault.Direction.IN, Fault.Protocol.TCP, 8123)
+                .delay(150, TimeUnit.MILLISECONDS);
+
+        String json = objectMapper.writeValueAsString(delay);
+
+        assertEquals(
+                "{\n" +
+                "   \"name\": \"my-delay\",        \n" +
+                "   \"type\": \"DELAY\",           \n" +
+                "   \"direction\": \"IN\",         \n" +
+                "   \"protocol\": \"TCP\",         \n" +
+                "   \"to_port\": 8123,             \n" +
+                "   \"delay\": 150                 \n" +
+                "}",
+            json, NON_EXTENSIBLE);
+    }
 }

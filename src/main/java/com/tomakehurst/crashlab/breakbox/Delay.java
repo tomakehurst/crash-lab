@@ -1,12 +1,15 @@
 package com.tomakehurst.crashlab.breakbox;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.tomakehurst.crashlab.TimeInterval;
 
 import java.util.concurrent.TimeUnit;
 
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_NULL;
 import static com.tomakehurst.crashlab.TimeInterval.interval;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
+@JsonSerialize(include = NON_NULL)
 public class Delay extends Fault {
 
     public enum Distribution { UNIFORM, NORMAL, PARETO, PARETONORMAL }
@@ -14,7 +17,7 @@ public class Delay extends Fault {
     private TimeInterval delay;
     private TimeInterval variance;
     private Distribution distribution;
-    private int correlation;
+    private Integer correlation;
 
     Delay(BreakBoxAdminClient adminClient, String name, Direction direction, Protocol protocol, int toPort) {
         super(adminClient, name, direction, protocol, toPort);
@@ -45,19 +48,20 @@ public class Delay extends Fault {
         return this;
     }
 
-    public long getDelay() {
-        return delay.timeIn(MILLISECONDS);
+    public Long getDelay() {
+        return delay == null ? null : delay.timeIn(MILLISECONDS);
     }
 
-    public long getVariance() {
-        return variance.timeIn(MILLISECONDS);
+    public Long getVariance() {
+        return variance == null ? null : variance.timeIn(MILLISECONDS);
     }
 
     public String getDistribution() {
-        return distribution.toString().toLowerCase();
+        return distribution == null ? null : distribution.toString().toLowerCase();
     }
 
-    public int getCorrelation() {
+    public Integer getCorrelation() {
         return correlation;
     }
+
 }
