@@ -1,8 +1,6 @@
 package com.tomakehurst.crashlab;
 
-import com.ning.http.client.AsyncCompletionHandler;
-import com.ning.http.client.AsyncHttpClient;
-import com.ning.http.client.Response;
+import com.ning.http.client.*;
 
 import java.io.IOException;
 
@@ -13,7 +11,16 @@ public abstract class HttpSteps implements Runnable {
     private final String name;
 
     protected HttpSteps(String name) {
-        this(name, new NoOpCompetionHandler(), new AsyncHttpClient());
+        this(name, new NoOpCompetionHandler(), buildClient());
+    }
+
+    protected static AsyncHttpClient buildClient() {
+        final int timeoutMs = 60 * 60 * 1000;
+        AsyncHttpClientConfig config = new AsyncHttpClientConfig.Builder()
+                .setConnectionTimeoutInMs(timeoutMs)
+                .setRequestTimeoutInMs(timeoutMs)
+                .build();
+        return new AsyncHttpClient(config);
     }
 
     protected HttpSteps(String name, AsyncCompletionHandler<Response> completionHandler, AsyncHttpClient httpClient) {
@@ -35,5 +42,5 @@ public abstract class HttpSteps implements Runnable {
         }
     }
 
-    public abstract void run(AsyncHttpClient http, AsyncCompletionHandler<Response> completionHandler) throws IOException;
+    public abstract ListenableFuture<Response> run(AsyncHttpClient http, AsyncCompletionHandler<Response> completionHandler) throws IOException;
 }
