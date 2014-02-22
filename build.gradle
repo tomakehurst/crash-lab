@@ -24,3 +24,7 @@ dependencies {
 task wrapper(type: Wrapper) {
     gradleVersion = '1.8'
 }
+
+test {
+    exclude '**/ExampleScenarioTest*'
+}
