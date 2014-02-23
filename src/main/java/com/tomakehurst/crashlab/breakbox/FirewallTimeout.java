@@ -5,7 +5,7 @@ import com.tomakehurst.crashlab.TimeInterval;
 import java.util.concurrent.TimeUnit;
 
 import static com.tomakehurst.crashlab.TimeInterval.interval;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class FirewallTimeout extends Fault {
 
@@ -28,6 +28,6 @@ public class FirewallTimeout extends Fault {
     }
 
     public long getTimeout() {
-        return tcpTimeout.timeIn(MILLISECONDS);
+        return tcpTimeout.timeIn(SECONDS);
     }
 }

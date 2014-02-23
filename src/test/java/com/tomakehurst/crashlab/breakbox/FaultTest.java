@@ -134,7 +134,7 @@ public class FaultTest {
         firewallTimeout.setDirection(Fault.Direction.OUT);
         firewallTimeout.setProtocol(Fault.Protocol.TCP);
         firewallTimeout.setToPort(3131);
-        firewallTimeout.timeout(7, TimeUnit.MILLISECONDS);
+        firewallTimeout.timeout(7, TimeUnit.SECONDS);
 
         String json = objectMapper.writeValueAsString(firewallTimeout);
 
