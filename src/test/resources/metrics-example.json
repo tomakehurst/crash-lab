@@ -137,10 +137,14 @@
             "value": 0.75
         }
     },
-    "counters": {},
+    "counters": {
+        "io.dropwizard.jetty.MutableServletContextHandler.active-dispatches": {
+            "count": 3
+        }
+    },
     "histograms": {
         "example-histogram": {
-            "count": 5,
+            "count": 213,
             "max": 5,
             "mean": 3,
             "min": 1,

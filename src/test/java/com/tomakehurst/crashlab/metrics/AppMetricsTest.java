@@ -58,7 +58,27 @@ public class AppMetricsTest {
         assertThat(meterSnapshot.meanRate(), is(0.04234514072015045));
     }
 
+    @Test
+    public void should_return_correct_value_for_counter() {
+        Long counterValue = appMetrics.counter("io.dropwizard.jetty.MutableServletContextHandler.active-dispatches");
+        assertThat(counterValue, is(3L));
+    }
 
+    @Test
+    public void should_return_correct_values_for_histogram() {
+        HistogramSnapshot histogramSnapshot = appMetrics.histogram("example-histogram");
+        assertThat(histogramSnapshot.count(), is(213L));
+        assertThat(histogramSnapshot.max(), is(5L));
+        assertThat(histogramSnapshot.min(), is(1L));
+        assertThat(histogramSnapshot.mean(), is(3d));
+        assertThat(histogramSnapshot.stddev(), is(1.5811388300841898));
+        assertThat(histogramSnapshot.median(), is(3d));
+        assertThat(histogramSnapshot.percentile75(), is(4.5));
+        assertThat(histogramSnapshot.percentile95(), is(5d));
+        assertThat(histogramSnapshot.percentile98(), is(5d));
+        assertThat(histogramSnapshot.percentile99(), is(5d));
+        assertThat(histogramSnapshot.percentile999(), is(5d));
+    }
 
     @Test
     public void throws_useful_exception_when_timer_not_found() {
