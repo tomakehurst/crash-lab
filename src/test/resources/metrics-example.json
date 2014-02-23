@@ -138,8 +138,31 @@
         }
     },
     "counters": {},
-    "histograms": {},
-    "meters": {},
+    "histograms": {
+        "example-histogram": {
+            "count": 5,
+            "max": 5,
+            "mean": 3,
+            "min": 1,
+            "p50": 3,
+            "p75": 4.5,
+            "p95": 5,
+            "p98": 5,
+            "p99": 5,
+            "p999": 5,
+            "stddev": 1.5811388300841898
+        }
+    },
+    "meters": {
+        "io.dropwizard.jetty.MutableServletContextHandler.2xx-responses": {
+            "count": 5,
+            "m15_rate": 0.07995558537067671,
+            "m1_rate": 0.005540151995103271,
+            "m5_rate": 0.01652854617838251,
+            "mean_rate": 0.04234514072015045,
+            "units": "events/second"
+        }
+    },
     "timers": {
         "io.dropwizard.jetty.MutableServletContextHandler.connect-requests": {},
         "io.dropwizard.jetty.MutableServletContextHandler.delete-requests": {},

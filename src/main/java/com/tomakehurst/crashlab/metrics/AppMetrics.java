@@ -13,12 +13,15 @@ public class AppMetrics {
 
     private final Map<String, TimerSnapshot> timers;
     private final Map<String, Value<?>> gauges;
+    private final Map<String, MeterSnapshot> meters;
 
     @JsonCreator
     public AppMetrics(@JsonProperty("timers") Map<String, TimerSnapshot> timers,
-                      @JsonProperty("gauges") Map<String, Value<?>> gauges) {
+                      @JsonProperty("gauges") Map<String, Value<?>> gauges,
+                      @JsonProperty("meters") Map<String, MeterSnapshot> meters) {
         this.timers = timers;
         this.gauges = gauges;
+        this.meters = meters;
     }
 
     public TimerSnapshot timer(String name) {
@@ -30,5 +33,10 @@ public class AppMetrics {
     public <T> T gauge(String name) {
         checkArgument(gauges.containsKey(name), "No gauge found named " + name);
         return (T) gauges.get(name).getValue();
+    }
+
+    public MeterSnapshot meter(String name) {
+        checkArgument(meters.containsKey(name), "No meter found named " + name);
+        return meters.get(name);
     }
 }

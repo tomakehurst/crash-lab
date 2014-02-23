@@ -6,9 +6,8 @@ import com.tomakehurst.crashlab.TimeInterval;
 
 import java.util.concurrent.TimeUnit;
 
-public class TimerSnapshot {
+public class TimerSnapshot extends MeterSnapshot {
 
-    private final long count;
     private final double max;
     private final double mean;
     private final double min;
@@ -19,17 +18,12 @@ public class TimerSnapshot {
     private final double p99;
     private final double p999;
     private final double stddev;
-    private final double m15_rate;
-    private final double m1_rate;
-    private final double m5_rate;
-    private final double mean_rate;
     private final TimeUnit durationUnit;
-    private final String rateUnit;
 
     public TimerSnapshot(@JsonProperty("count") long count,
                          @JsonProperty("max") double max,
-                         @JsonProperty("mean") double mean,
                          @JsonProperty("min") double min,
+                         @JsonProperty("mean") double mean,
                          @JsonProperty("p50") double p50,
                          @JsonProperty("p75") double p75,
                          @JsonProperty("p95") double p95,
@@ -43,7 +37,9 @@ public class TimerSnapshot {
                          @JsonProperty("mean_rate") double meanRate,
                          @JsonProperty("duration_units") String durationUnit,
                          @JsonProperty("rate_units") String rateUnit) {
-        this.count = count;
+
+        super(count, m1Rate, m5Rate, m15Rate, meanRate, rateUnit);
+
         this.max = max;
         this.mean = mean;
         this.min = min;
@@ -54,16 +50,7 @@ public class TimerSnapshot {
         this.p99 = p99;
         this.p999 = p999;
         this.stddev = stddev;
-        this.m15_rate = m15Rate;
-        this.m1_rate = m1Rate;
-        this.m5_rate = m5Rate;
-        this.mean_rate = meanRate;
         this.durationUnit = TimeUnit.valueOf(Optional.fromNullable(durationUnit).or("seconds").toUpperCase());
-        this.rateUnit = rateUnit;
-    }
-
-    public long count() {
-        return count;
     }
 
     public TimeInterval max() {

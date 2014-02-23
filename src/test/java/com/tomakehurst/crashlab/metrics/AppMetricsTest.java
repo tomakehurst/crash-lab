@@ -2,6 +2,7 @@ package com.tomakehurst.crashlab.metrics;
 
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -18,10 +19,15 @@ public class AppMetricsTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
+    AppMetrics appMetrics;
+
+    @Before
+    public void init() {
+        appMetrics = new StubJsonAppMetricsSource().fetch();
+    }
+
     @Test
     public void should_return_correct_values_for_timer_snapshot() {
-        AppMetrics appMetrics = new MockJsonAppMetricsSource().fetch();
-
         TimerSnapshot timerSnapshot = appMetrics.timer("webresources.no-connect-timeout.timer");
         assertThat(timerSnapshot.count(), is(6L));
         assertThat(timerSnapshot.max().timeIn(MILLISECONDS), is(112L));
@@ -37,12 +43,30 @@ public class AppMetricsTest {
     }
 
     @Test
-    public void throws_useful_exception_when_timer_not_found() {
-        expectedException.expectMessage("No timer found named does.not.exist");
-        new MockJsonAppMetricsSource().fetch().timer("does.not.exist");
+    public void should_return_correct_value_for_gague() {
+        Integer gaugeValue = appMetrics.gauge("org.eclipse.jetty.util.thread.QueuedThreadPool.dw.size");
+        assertThat(gaugeValue, is(8));
     }
 
-    static class MockJsonAppMetricsSource extends JsonAppMetricsSource {
+    @Test
+    public void should_return_correct_value_for_meter() {
+        MeterSnapshot meterSnapshot = appMetrics.meter("io.dropwizard.jetty.MutableServletContextHandler.2xx-responses");
+        assertThat(meterSnapshot.count(), is(5L));
+        assertThat(meterSnapshot.m1Rate(), is(0.005540151995103271));
+        assertThat(meterSnapshot.m5Rate(), is(0.01652854617838251));
+        assertThat(meterSnapshot.m15Rate(), is(0.07995558537067671));
+        assertThat(meterSnapshot.meanRate(), is(0.04234514072015045));
+    }
+
+
+
+    @Test
+    public void throws_useful_exception_when_timer_not_found() {
+        expectedException.expectMessage("No timer found named does.not.exist");
+        new StubJsonAppMetricsSource().fetch().timer("does.not.exist");
+    }
+
+    static class StubJsonAppMetricsSource extends JsonAppMetricsSource {
 
         @Override
         protected String getJson() {
