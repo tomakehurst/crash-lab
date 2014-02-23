@@ -36,6 +36,9 @@ public class BreakBox {
     }
 
     public <T extends Fault> void addFault(T fault) {
+        fault.setDirection(direction);
+        fault.setProtocol(protocol);
+        fault.setToPort(destPort);
         adminClient.addFault(fault);
     }
 

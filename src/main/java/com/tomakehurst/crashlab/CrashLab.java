@@ -24,17 +24,18 @@ public class CrashLab {
             }
         };
 
-        final int stepCount = responseFutures.size();
 
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
         Stopwatch stopwatch = Stopwatch.createStarted();
         executor.scheduleAtFixedRate(trackingSteps, 0, rate.periodIn(NANOSECONDS), NANOSECONDS);
+        int stepCount = 0;
         try {
             Thread.sleep(interval.timeIn(MILLISECONDS));
             executor.shutdown();
             executor.awaitTermination(interval.nanos(), NANOSECONDS);
             while (!responseFutures.isEmpty()) {
                 ListenableFuture<Response> responseFuture = responseFutures.poll();
+                stepCount++;
                 responseFuture.get();
             }
         } catch (InterruptedException e) {

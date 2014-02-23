@@ -21,6 +21,8 @@ repositories {
 	mavenCentral()
 }
 
+project.buildDir = System.getProperty('java.io.tmpdir') + File.separator + 'crash-test-build'
+
 dependencies {
     compile 'io.dropwizard:dropwizard-core:0.7.0-rc1'
     compile 'io.dropwizard:dropwizard-metrics-graphite:0.7.0-rc1'

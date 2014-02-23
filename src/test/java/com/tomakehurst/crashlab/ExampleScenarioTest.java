@@ -37,8 +37,8 @@ public class ExampleScenarioTest {
     }
 
     @Test
-    public void apply_load_and_assert_metrics_with_no_faults() {
-        crashLab.run(period(10, SECONDS), rate(50).per(SECONDS), new HttpSteps("10 seconds moderate load") {
+    public void latency_less_than_200ms_with_no_faults() {
+        crashLab.run(period(10, SECONDS), rate(20).per(SECONDS), new HttpSteps("10 seconds moderate load") {
             public ListenableFuture<Response> run(AsyncHttpClient http, AsyncCompletionHandler<Response> completionHandler) throws IOException {
                 return http.prepareGet(BASE_URL + ":8080/no-connect-timeout").execute(completionHandler);
             }
@@ -82,6 +82,7 @@ public class ExampleScenarioTest {
 
     @Test
     public void should_not_lock_up_after_pooled_connections_to_text_service_have_timed_out() {
+
     }
 
 }
