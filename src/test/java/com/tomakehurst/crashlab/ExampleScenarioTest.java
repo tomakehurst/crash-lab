@@ -15,6 +15,8 @@ import java.io.IOException;
 import static com.tomakehurst.crashlab.Rate.rate;
 import static com.tomakehurst.crashlab.TimeInterval.interval;
 import static com.tomakehurst.crashlab.TimeInterval.period;
+import static com.tomakehurst.crashlab.breakbox.Delay.delay;
+import static com.tomakehurst.crashlab.breakbox.PacketLoss.packetLoss;
 import static com.tomakehurst.crashlab.metrics.TimeIntervalMatchers.lessThan;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -50,7 +52,7 @@ public class ExampleScenarioTest {
 
     @Test
     public void latency_should_not_exceed_1s_when_network_flaky() {
-        textSnippetServiceBreakBox.packetLoss("flaky-connection-to-text").probability(40).correlation(15).enable();
+        textSnippetServiceBreakBox.addFault(packetLoss("flaky-connection-to-text").probability(40).correlation(15));
 
         crashLab.run(period(10, SECONDS), rate(50).per(SECONDS), new HttpSteps("GET web resource repeatedly") {
             public ListenableFuture<Response> run(AsyncHttpClient http, AsyncCompletionHandler<Response> completionHandler) throws IOException {
@@ -61,6 +63,25 @@ public class ExampleScenarioTest {
         AppMetrics appMetrics = metricsSource.fetch();
         TimeInterval p95 = appMetrics.timer("webresources.no-connect-timeout.timer").percentile95();
         assertThat(p95, lessThan(1000, MILLISECONDS));
+    }
+
+    @Test
+    public void latency_should_not_exceed_1s_when_network_slow() {
+        textSnippetServiceBreakBox.addFault(delay("text-service-slowness").delay(1, SECONDS).variance(500, MILLISECONDS));
+
+        crashLab.run(period(10, SECONDS), rate(30).per(SECONDS), new HttpSteps("GET web resource repeatedly") {
+            public ListenableFuture<Response> run(AsyncHttpClient http, AsyncCompletionHandler<Response> completionHandler) throws IOException {
+                return http.prepareGet(BASE_URL + ":8080/no-connect-timeout").execute(completionHandler);
+            }
+        });
+
+        AppMetrics appMetrics = metricsSource.fetch();
+        TimeInterval p95 = appMetrics.timer("webresources.no-connect-timeout.timer").percentile95();
+        assertThat(p95, lessThan(1000, MILLISECONDS));
+    }
+
+    @Test
+    public void should_not_lock_up_after_pooled_connections_to_text_service_have_timed_out() {
     }
 
 }

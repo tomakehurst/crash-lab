@@ -31,11 +31,13 @@ public class BreakBox {
         return new BreakBox(name, Fault.Direction.OUT, protocol, destPort, asList(hosts));
     }
 
-    public PacketLoss packetLoss(String name) {
-        return new PacketLoss(adminClient, name, direction, protocol, destPort);
-    }
-
     public void reset() {
         adminClient.reset();
     }
+
+    public <T extends Fault> void addFault(T fault) {
+        adminClient.addFault(fault);
+    }
+
+
 }

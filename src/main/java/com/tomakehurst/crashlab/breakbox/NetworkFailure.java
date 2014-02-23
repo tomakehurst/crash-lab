@@ -2,8 +2,10 @@ package com.tomakehurst.crashlab.breakbox;
 
 public class NetworkFailure extends Fault {
 
-    NetworkFailure(BreakBoxAdminClient adminClient, String name, Direction direction, Protocol protocol, int toPort) {
-        super(adminClient, name, direction, protocol, toPort);
+    public static NetworkFailure networkFailure(String name) {
+        NetworkFailure networkFailure = new NetworkFailure();
+        networkFailure.setName(name);
+        return networkFailure;
     }
 
     @Override

@@ -19,8 +19,10 @@ public class Delay extends Fault {
     private Distribution distribution;
     private Integer correlation;
 
-    Delay(BreakBoxAdminClient adminClient, String name, Direction direction, Protocol protocol, int toPort) {
-        super(adminClient, name, direction, protocol, toPort);
+    public static Delay delay(String name) {
+        Delay delay = new Delay();
+        delay.setName(name);
+        return delay;
     }
 
     @Override

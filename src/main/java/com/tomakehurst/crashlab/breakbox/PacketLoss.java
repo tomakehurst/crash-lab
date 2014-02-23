@@ -5,8 +5,10 @@ public class PacketLoss extends Fault {
     private double probability;
     private int correlation;
 
-    PacketLoss(BreakBoxAdminClient adminClient, String name, Direction direction, Protocol protocol, int toPort) {
-        super(adminClient, name, direction, protocol, toPort);
+    public static PacketLoss packetLoss(String name) {
+        PacketLoss packetLoss = new PacketLoss();
+        packetLoss.setName(name);
+        return packetLoss;
     }
 
     public PacketLoss probability(double probability) {

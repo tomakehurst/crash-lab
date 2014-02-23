@@ -8,19 +8,10 @@ public abstract class Fault {
     public enum Type { NETWORK_FAILURE, SERVICE_FAILURE, FIREWALL_TIMEOUT, DELAY, PACKET_LOSS;}
     public enum Protocol { TCP, UDP }
 
-    private final BreakBoxAdminClient adminClient;
-    protected final String name;
-    protected final Direction direction;
-    protected final Protocol protocol;
-    protected final int toPort;
-
-    protected Fault(BreakBoxAdminClient adminClient, String name, Direction direction, Protocol protocol, int toPort) {
-        this.adminClient = adminClient;
-        this.name = name;
-        this.direction = direction;
-        this.protocol = protocol;
-        this.toPort = toPort;
-    }
+    protected String name;
+    protected Direction direction;
+    protected Protocol protocol;
+    protected int toPort;
 
     public String getName() {
         return name;
@@ -41,7 +32,19 @@ public abstract class Fault {
 
     public abstract Type getType();
 
-    public void enable() {
-        adminClient.addFault(this);
+    void setName(String name) {
+        this.name = name;
+    }
+
+    void setDirection(Direction direction) {
+        this.direction = direction;
+    }
+
+    void setProtocol(Protocol protocol) {
+        this.protocol = protocol;
+    }
+
+    void setToPort(int toPort) {
+        this.toPort = toPort;
     }
 }

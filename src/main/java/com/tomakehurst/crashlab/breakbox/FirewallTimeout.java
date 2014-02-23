@@ -11,8 +11,10 @@ public class FirewallTimeout extends Fault {
 
     private TimeInterval tcpTimeout;
 
-    FirewallTimeout(BreakBoxAdminClient adminClient, String name, Direction direction, Protocol protocol, int toPort) {
-        super(adminClient, name, direction, protocol, toPort);
+    public static FirewallTimeout firewallTimeout(String name) {
+        FirewallTimeout firewallTimeout = new FirewallTimeout();
+        firewallTimeout.setName(name);
+        return firewallTimeout;
     }
 
     @Override
