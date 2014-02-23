@@ -76,4 +76,58 @@ public class FaultTest {
                 "}",
             json, NON_EXTENSIBLE);
     }
+
+    @Test
+    public void network_failure_generates_correct_json() throws Exception {
+        NetworkFailure networkFailure = new NetworkFailure(null, "a-network-fail", Fault.Direction.OUT, Fault.Protocol.UDP, 1111);
+
+        String json = objectMapper.writeValueAsString(networkFailure);
+
+        assertEquals(
+                "{\n" +
+                "   \"name\": \"a-network-fail\", \n" +
+                "   \"type\": \"NETWORK_FAILURE\", \n" +
+                "   \"direction\": \"OUT\",        \n" +
+                "   \"protocol\": \"UDP\",         \n" +
+                "   \"to_port\": 1111              \n" +
+                "}",
+            json, NON_EXTENSIBLE);
+
+    }
+
+    @Test
+    public void service_failure_generates_correct_json() throws Exception {
+        ServiceFailure serviceFailure = new ServiceFailure(null, "a-service-fail", Fault.Direction.OUT, Fault.Protocol.TCP, 2222);
+
+        String json = objectMapper.writeValueAsString(serviceFailure);
+
+        assertEquals(
+                "{\n" +
+                "   \"name\": \"a-service-fail\", \n" +
+                "   \"type\": \"SERVICE_FAILURE\", \n" +
+                "   \"direction\": \"OUT\",        \n" +
+                "   \"protocol\": \"TCP\",         \n" +
+                "   \"to_port\": 2222              \n" +
+                "}",
+            json, NON_EXTENSIBLE);
+    }
+
+    @Test
+    public void tcp_timeout_generates_correct_json() throws Exception {
+        FirewallTimeout firewallTimeout = new FirewallTimeout(null, "tcp-timing-out", Fault.Direction.OUT, Fault.Protocol.TCP, 3131)
+                .timeout(7, TimeUnit.MILLISECONDS);
+
+        String json = objectMapper.writeValueAsString(firewallTimeout);
+
+        assertEquals(
+                "{\n" +
+                "   \"name\": \"tcp-timing-out\",  \n" +
+                "   \"type\": \"FIREWALL_TIMEOUT\",\n" +
+                "   \"direction\": \"OUT\",        \n" +
+                "   \"protocol\": \"TCP\",         \n" +
+                "   \"to_port\": 3131,             \n" +
+                "   \"timeout\": 7                 \n" +
+                "}",
+        json, NON_EXTENSIBLE);
+    }
 }
