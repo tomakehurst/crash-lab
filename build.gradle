@@ -5,7 +5,7 @@ apply plugin: 'signing'
 
 sourceCompatibility = 1.7
 group = 'com.github.tomakehurst'
-version = 0.1
+version = 0.2
 
 repositories {
 	mavenCentral()
@@ -105,4 +105,59 @@ task addGitTag << {
 
 task release {
 	dependsOn clean, build, uploadArchives, addGitTag
+}
+
+task 'bump-version' << {
+    def filesWithVersion = [
+        'build.gradle': { "version = 0.${it}" },
+    ]
+
+    def gradleBuildFile = new File('build.gradle')
+    int currentMinorVersion
+    gradleBuildFile.text.find ~/version = 0.([0-9]+)/, { match, minorVersion ->
+        currentMinorVersion = Integer.valueOf(minorVersion)
+        int nextMinorVersion = currentMinorVersion + 1
+
+        filesWithVersion.each { fileName, lineWithVersionTemplates ->
+            def file = new File(fileName)
+            def lineWithVersionTemplateList = lineWithVersionTemplates instanceof List ?
+                lineWithVersionTemplates :
+                [lineWithVersionTemplates];
+
+            lineWithVersionTemplateList.each { lineWithVersionTemplate ->
+                def oldLine = lineWithVersionTemplate.call(currentMinorVersion)
+                def newLine = lineWithVersionTemplate.call(nextMinorVersion)
+                println "Replacing '${oldLine}' with '${newLine}' in ${fileName}"
+                file.text = file.text.replace(oldLine, newLine);
+            }
+        }
+    }
+}
+
+task 'add-copyright-headers' << {
+	def copyrightNotice = """/*
+ * Copyright (C) 2011 Thomas Akehurst
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+"""
+
+	def srcDir = new File('src')
+	srcDir.eachFileRecurse { file ->
+		if (file.name.endsWith(".java") && !file.text.contains(copyrightNotice)) {
+			println "Adding copyright header to $file.path"
+			def newFileText = copyrightNotice + file.text;
+ 			file.text = newFileText;
+		}
+	}
 }
