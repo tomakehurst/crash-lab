@@ -23,7 +23,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-public class ExampleScenarioTest {
+public class ExampleScenarios {
 
     static final String BASE_URL = "http://192.168.2.12";
     static final String GET_TEXT_URL = BASE_URL + ":8080/no-connect-timeout";

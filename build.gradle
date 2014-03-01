@@ -26,5 +26,5 @@ task wrapper(type: Wrapper) {
 }
 
 test {
-    exclude '**/ExampleScenarioTest*'
+    exclude '**/ExampleScenarios*'
 }
