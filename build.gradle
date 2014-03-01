@@ -1,9 +1,11 @@
 apply plugin: 'java'
 apply plugin: 'idea'
+apply plugin: 'maven'
+apply plugin: 'signing'
 
 sourceCompatibility = 1.7
 group = 'com.github.tomakehurst'
-version = 1
+version = 0.1.1
 
 repositories {
 	mavenCentral()
@@ -27,4 +29,80 @@ task wrapper(type: Wrapper) {
 
 test {
     exclude '**/ExampleScenarios*'
+}
+
+task sourcesJar(type: Jar, dependsOn:classes) {
+     classifier = 'sources'
+     from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn:javadoc) {
+     classifier = 'javadoc'
+     from javadoc.destinationDir
+}
+
+artifacts {
+     archives sourcesJar
+     archives javadocJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+if (!this.hasProperty('sonatypeUser')) sonatypeUser = 'default';
+if (!this.hasProperty('sonatypePassword')) sonatypePassword = 'default';
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2') {
+            	authentication(userName: sonatypeUser , password: sonatypePassword)
+        	};
+        	beforeDeployment { deployment -> signPom(deployment) };
+            pom.artifactId = 'crash-lab'
+            pom.project {
+            	packaging 'jar'
+            	name 'CrashLab'
+            	description 'A Java resilience testing library'
+
+            	url 'https://github.com/tomakehurst/crash-lab'
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+
+                scm {
+					connection 'https://tomakehurst@github.com/tomakehurst/crash-lab.git'
+					developerConnection 'https://tomakehurst@github.com/tomakehurst/crash-lab.git'
+					url 'https://tomakehurst@github.com/tomakehurst/crash-lab.git'
+				}
+
+				developers {
+					developer {
+						id 'tomakehurst'
+						name 'Tom Akehurst'
+					}
+				}
+            }
+
+            pom.whenConfigured { thepom ->
+            	println thepom.dependencies.findAll({ it.artifactId.equals('junit') || it.scope.equals('test') });
+            	thepom.dependencies.removeAll(thepom.dependencies.findAll({ it.artifactId.equals('junit') || it.scope.equals('test') }));
+			}
+        }
+    }
+}
+
+task addGitTag << {
+    println "git tag v${version}".execute().text
+    println "git push origin --tags".execute().text
+}
+
+task release {
+	dependsOn clean, build, uploadArchives, addGitTag
 }
