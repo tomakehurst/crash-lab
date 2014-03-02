@@ -28,7 +28,7 @@ dependencies {
     compile 'io.dropwizard:dropwizard-metrics-graphite:0.7.0-rc1'
     compile 'io.dropwizard:dropwizard-client:0.7.0-rc1'
     compile 'io.dropwizard:dropwizard-db:0.7.0-rc1'
-	compile("com.github.tomakehurst:wiremock:1.41") {
+	compile("com.github.tomakehurst:wiremock:1.43") {
 	    exclude module: 'servlet-api'
 	}
 

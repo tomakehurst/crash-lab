@@ -25,13 +25,21 @@ public class CrashTestResource {
 
     private static final Logger log = LoggerFactory.getLogger(CrashTestResource.class);
 
-    private final HttpClient httpClient;
+    private final HttpClient longTimeoutHhttpClient;
+    private final HttpClient shortTimeoutHttpClient;
     private final String wireMockHost;
+    private final WireMock wireMock;
 
-    public CrashTestResource(HttpClient httpClient, String wireMockHost, WireMock wireMock) {
-        this.httpClient = httpClient;
+    public CrashTestResource(HttpClient longTimeoutHhttpClient, HttpClient shortTimeoutHttpClient, WireMock wireMock, String wireMockHost) {
+        this.longTimeoutHhttpClient = longTimeoutHhttpClient;
+        this.shortTimeoutHttpClient = shortTimeoutHttpClient;
         this.wireMockHost = wireMockHost;
 
+        this.wireMock = wireMock;
+        configureDefaultWireMockStub();
+    }
+
+    private void configureDefaultWireMockStub() {
         wireMock.resetMappings();
         wireMock.register(get(urlEqualTo("/something")).willReturn(
                 aResponse().withStatus(200).withBody("Success").withFixedDelay(100)));
@@ -49,7 +57,7 @@ public class CrashTestResource {
         HttpGet get = getSomething();
         HttpResponse response;
         try {
-            response = httpClient.execute(get);
+            response = longTimeoutHhttpClient.execute(get);
             return Response.ok(EntityUtils.toString(response.getEntity())).build();
         } catch (IOException ioe) {
             log.error("Failed to GET " + get.getURI(), ioe);
@@ -62,20 +70,16 @@ public class CrashTestResource {
     @GET
     @Timed(name = "webresources.bad-http-client-error-handling.timer", absolute = true)
     @Path("bad-http-client-error-handling")
-    public String httpClientWithBadErrorHandling() {
+    public Response httpClientWithBadErrorHandling() {
         HttpGet get = getSomething();
         HttpResponse response;
         try {
-            response = httpClient.execute(get);
+            response = shortTimeoutHttpClient.execute(get);
             String result = EntityUtils.toString(response.getEntity());
             get.releaseConnection();
-            return result;
+            return Response.ok(result).build();
         } catch (IOException ioe) {
-
-            StringWriter stringWriter = new StringWriter();
-            PrintWriter pw = new PrintWriter(stringWriter);
-            ioe.printStackTrace(pw);
-            return "Failure:\n" + stringWriter.toString();
+            return Response.serverError().entity(renderFailureMessage(ioe)).build();
         }
     }
 

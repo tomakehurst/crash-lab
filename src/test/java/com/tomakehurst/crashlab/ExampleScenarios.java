@@ -16,10 +16,12 @@ import static com.tomakehurst.crashlab.TimeInterval.period;
 import static com.tomakehurst.crashlab.breakbox.Delay.delay;
 import static com.tomakehurst.crashlab.breakbox.FirewallTimeout.firewallTimeout;
 import static com.tomakehurst.crashlab.breakbox.PacketLoss.packetLoss;
+import static com.tomakehurst.crashlab.breakbox.ServiceFailure.serviceFailure;
 import static com.tomakehurst.crashlab.metrics.TimeIntervalMatchers.lessThan;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -27,10 +29,12 @@ public class ExampleScenarios {
 
     static final String BASE_URL = "http://192.168.2.12";
     static final String GET_TEXT_URL = BASE_URL + ":8080/no-connect-timeout";
+    static final String GET_TEXT_WITH_BAD_ERROR_HANDLING_URL = BASE_URL + ":8080/bad-http-client-error-handling";
 
     static HttpJsonAppMetricsSource metricsSource = new HttpJsonAppMetricsSource(BASE_URL + ":8081/metrics");
     static CrashLab crashLab = new CrashLab();
     BreakBox textSnippetServiceBreakBox = BreakBox.defineClient("text-snippet-web-service", 8080, "192.168.2.12");
+
 
     @Before
     public void init() {
@@ -99,6 +103,34 @@ public class ExampleScenarios {
         assertThat(response.getStatusCode(), is(200));
 
         printHttpClientPoolGauges();
+    }
+
+    @Test
+    public void should_not_leak_pooled_http_connections_when_text_service_responses_sometimes_time_out() throws Exception {
+        crashLab.run(period(5, SECONDS), rate(30).per(SECONDS), new HttpSteps("Warm-up") {
+            public ListenableFuture<Response> run(AsyncHttpClient http, AsyncCompletionHandler<Response> completionHandler) throws IOException {
+                return http.prepareGet(GET_TEXT_WITH_BAD_ERROR_HANDLING_URL).execute(completionHandler);
+            }
+        });
+
+        int initialLeasedConnections = metricsSource.fetch()
+                .gauge("org.apache.http.conn.ClientConnectionManager.wiremock-client.leased-connections");
+
+        textSnippetServiceBreakBox.addFault(delay("text-service-delay").delay(500, MILLISECONDS).variance(250, MILLISECONDS));
+
+        crashLab.run(period(5, SECONDS), rate(30).per(SECONDS), new HttpSteps("Run with broken text service") {
+            public ListenableFuture<Response> run(AsyncHttpClient http, AsyncCompletionHandler<Response> completionHandler) throws IOException {
+                return http.prepareGet(GET_TEXT_WITH_BAD_ERROR_HANDLING_URL).execute(completionHandler);
+            }
+        });
+
+        int finalLeasedConnections = metricsSource.fetch()
+                .gauge("org.apache.http.conn.ClientConnectionManager.wiremock-client.leased-connections");
+        assertThat(finalLeasedConnections, lessThanOrEqualTo(plus50Percent(initialLeasedConnections)));
+    }
+
+    private int plus50Percent(int value) {
+        return (int) (value * 1.5);
     }
 
     private void printHttpClientPoolGauges() {

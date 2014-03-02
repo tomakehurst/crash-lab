@@ -8,3 +8,8 @@ clientConfig:
   connectionTimeout: 2s
   timeout: 30m
   keepAlive: 10m
+
+shortTimeoutClientConfig:
+  connectionTimeout: 500ms
+  timeout: 500ms
+  keepAlive: 10m

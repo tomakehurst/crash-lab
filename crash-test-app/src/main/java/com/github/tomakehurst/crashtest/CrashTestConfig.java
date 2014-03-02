@@ -19,12 +19,19 @@ public class CrashTestConfig extends Configuration {
     @JsonProperty
     private HttpClientConfiguration clientConfig = new HttpClientConfiguration();
 
+    @JsonProperty
+    private HttpClientConfiguration shortTimeoutClientConfig = new HttpClientConfiguration();
+
     public String getWireMockHost() {
         return wireMockHost;
     }
 
     public HttpClient createHttpClient(Environment environment, String name) {
         return new HttpClientBuilder(environment).using(clientConfig).build(name);
+    }
+
+    public HttpClient createShortTimeoutHttpClient(Environment environment, String name) {
+        return new HttpClientBuilder(environment).using(shortTimeoutClientConfig).build(name);
     }
 
     public WireMock createWireMockClient() {

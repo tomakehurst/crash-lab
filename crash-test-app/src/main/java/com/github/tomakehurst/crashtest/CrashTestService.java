@@ -16,8 +16,9 @@ public class CrashTestService extends Application<CrashTestConfig> {
     public void run(CrashTestConfig configuration, Environment environment) throws Exception {
         environment.jersey().register(new CrashTestResource(
                 configuration.createHttpClient(environment, "wiremock-client"),
-                configuration.getWireMockHost(),
-                configuration.createWireMockClient()));
+                configuration.createShortTimeoutHttpClient(environment, "wiremock-short-timeout-client"),
+                configuration.createWireMockClient(), configuration.getWireMockHost()
+        ));
 
         Histogram histogram = environment.metrics().histogram("example-histogram");
         histogram.update(1);
