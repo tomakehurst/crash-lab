@@ -1,4 +1,4 @@
-package com.tomakehurst.crashlab.breakbox;
+package com.tomakehurst.crashlab.saboteur;
 
 import com.tomakehurst.crashlab.TimeInterval;
 

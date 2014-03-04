@@ -1,4 +1,4 @@
-package com.tomakehurst.crashlab.breakbox;
+package com.tomakehurst.crashlab.saboteur;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Function;
@@ -13,13 +13,13 @@ import static com.google.common.collect.Iterables.transform;
 import static com.tomakehurst.crashlab.utils.Exceptions.throwUnchecked;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-public class BreakBoxAdminClient {
+public class SaboteurAdminClient {
 
     private final AsyncHttpClient client;
     private final List<String> hosts;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public BreakBoxAdminClient(AsyncHttpClient client, List<String> hosts) {
+    public SaboteurAdminClient(AsyncHttpClient client, List<String> hosts) {
         this.client = client;
         this.hosts = hosts;
     }
