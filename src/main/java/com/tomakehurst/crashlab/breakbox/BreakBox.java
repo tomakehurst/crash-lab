@@ -31,6 +31,14 @@ public class BreakBox {
         return new BreakBox(name, Fault.Direction.OUT, protocol, destPort, asList(hosts));
     }
 
+    public static BreakBox defineService(String name, int destPort, String... hosts) {
+        return new BreakBox(name, Fault.Direction.IN, Fault.Protocol.TCP, destPort, asList(hosts));
+    }
+
+    public static BreakBox defineService(String name, Fault.Protocol protocol, int destPort, String... hosts) {
+        return new BreakBox(name, Fault.Direction.IN, protocol, destPort, asList(hosts));
+    }
+
     public void reset() {
         adminClient.reset();
     }

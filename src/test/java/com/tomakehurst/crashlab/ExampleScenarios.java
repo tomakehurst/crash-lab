@@ -2,6 +2,7 @@ package com.tomakehurst.crashlab;
 
 import com.ning.http.client.*;
 import com.tomakehurst.crashlab.breakbox.BreakBox;
+import com.tomakehurst.crashlab.breakbox.Fault;
 import com.tomakehurst.crashlab.metrics.AppMetrics;
 import com.tomakehurst.crashlab.metrics.HttpJsonAppMetricsSource;
 import org.junit.Before;

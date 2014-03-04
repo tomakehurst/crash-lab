@@ -32,19 +32,23 @@ public abstract class Fault {
 
     public abstract Type getType();
 
-    void setName(String name) {
+    public <T extends Fault> T setName(String name) {
         this.name = name;
+        return (T) this;
     }
 
-    void setDirection(Direction direction) {
+    public <T extends Fault> T setDirection(Direction direction) {
         this.direction = direction;
+        return (T) this;
     }
 
-    void setProtocol(Protocol protocol) {
+    public <T extends Fault> T setProtocol(Protocol protocol) {
         this.protocol = protocol;
+        return (T) this;
     }
 
-    void setToPort(int toPort) {
+    public <T extends Fault> T setToPort(int toPort) {
         this.toPort = toPort;
+        return (T) this;
     }
 }
