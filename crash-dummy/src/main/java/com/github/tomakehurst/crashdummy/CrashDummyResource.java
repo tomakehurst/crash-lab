@@ -36,13 +36,6 @@ public class CrashDummyResource {
         this.wireMockHost = wireMockHost;
 
         this.wireMock = wireMock;
-        configureDefaultWireMockStub();
-    }
-
-    private void configureDefaultWireMockStub() {
-        wireMock.resetMappings();
-        wireMock.register(get(urlEqualTo("/something")).willReturn(
-                aResponse().withStatus(200).withBody("Success").withFixedDelay(100)));
     }
 
     @GET
@@ -51,8 +44,8 @@ public class CrashDummyResource {
     }
 
     @GET
-    @Timed(name = "webresources.no-connect-timeout.timer", absolute = true)
-    @Path("no-connect-timeout")
+    @Timed(name = "webresources.some-text.timer", absolute = true)
+    @Path("some-text")
     public Response httpClientWithLongConnectTimeout() {
         HttpGet get = getSomething();
         HttpResponse response;
