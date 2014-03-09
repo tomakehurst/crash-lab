@@ -1,11 +1,11 @@
-package com.tomakehurst.crashlab.breakbox;
+package com.tomakehurst.crashlab.saboteur;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.tomakehurst.crashlab.breakbox.PacketLoss.packetLoss;
+import static com.tomakehurst.crashlab.saboteur.PacketLoss.packetLoss;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 import static org.skyscreamer.jsonassert.JSONCompareMode.NON_EXTENSIBLE;
 

@@ -1,4 +1,4 @@
-package com.tomakehurst.crashlab.breakbox;
+package com.tomakehurst.crashlab.saboteur;
 
 public class PacketLoss extends Fault {
 
