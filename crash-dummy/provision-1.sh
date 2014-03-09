@@ -2,8 +2,9 @@ yum install -y java-1.7.0-openjdk.x86_64 lsof wget nc
 
 # Set up and run WireMock
 [[ -z $(grep "wiremock" /etc/passwd) ]] && useradd wiremock
-rm -rf /usr/lib/wiremock
-cp -r /mnt/crash-test/wiremock /usr/lib
+mkdir -p /usr/lib/wiremock/mappings
+rm -rf /usr/lib/wiremock/mappings/*
+cp -r /mnt/crash-test/wiremock/mappings/* /usr/lib/wiremock/mappings
 cd /usr/lib/wiremock
 [[ -f wiremock-1.44-standalone.jar ]] || wget http://central.maven.org/maven2/com/github/tomakehurst/wiremock/1.44/wiremock-1.44-standalone.jar
 [[ -z $(pgrep -u wiremock java) ]] && nohup su -c "java -jar wiremock-1.44-standalone.jar --verbose" wiremock &
