@@ -68,15 +68,18 @@ public class CrashDummyResource {
         HttpResponse response;
         try {
             response = shortTimeoutHttpClient.execute(get);
+            if (response.getStatusLine().getStatusCode() != 200) {
+                throw new RuntimeException("Text snippet service returned status code " + response.getStatusLine().getStatusCode());
+            }
             String result = EntityUtils.toString(response.getEntity());
             get.releaseConnection();
             return Response.ok(result).build();
-        } catch (IOException ioe) {
-            return Response.serverError().entity(renderFailureMessage(ioe)).build();
+        } catch (Exception e) {
+            return Response.serverError().entity(renderFailureMessage(e)).build();
         }
     }
 
-    private String renderFailureMessage(IOException ioe) {
+    private String renderFailureMessage(Exception ioe) {
         StringWriter stringWriter = new StringWriter();
         PrintWriter pw = new PrintWriter(stringWriter);
         ioe.printStackTrace(pw);
