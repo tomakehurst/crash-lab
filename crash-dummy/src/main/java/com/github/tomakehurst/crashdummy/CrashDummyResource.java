@@ -54,7 +54,7 @@ public class CrashDummyResource {
             return Response.ok(EntityUtils.toString(response.getEntity())).build();
         } catch (IOException ioe) {
             log.error("Failed to GET " + get.getURI(), ioe);
-            return Response.serverError().entity(renderFailureMessage(ioe)).build();
+            return Response.serverError().entity("Text snippets is currently unavailable\n" + renderFailureMessage(ioe)).build();
         } finally {
             get.releaseConnection();
         }

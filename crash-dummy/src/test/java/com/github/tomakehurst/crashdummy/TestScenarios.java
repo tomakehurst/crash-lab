@@ -1,7 +1,6 @@
 package com.github.tomakehurst.crashdummy;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.http.Fault;
 import com.ning.http.client.*;
 import com.tomakehurst.crashlab.CrashLab;
 import com.tomakehurst.crashlab.HttpSteps;
@@ -14,7 +13,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static com.github.tomakehurst.wiremock.http.Fault.EMPTY_RESPONSE;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.google.common.util.concurrent.Uninterruptibles.sleepUninterruptibly;
 import static com.tomakehurst.crashlab.Rate.rate;
 import static com.tomakehurst.crashlab.TimeInterval.interval;
@@ -22,10 +21,10 @@ import static com.tomakehurst.crashlab.TimeInterval.period;
 import static com.tomakehurst.crashlab.metrics.TimeIntervalMatchers.lessThan;
 import static com.tomakehurst.crashlab.saboteur.Delay.delay;
 import static com.tomakehurst.crashlab.saboteur.FirewallTimeout.firewallTimeout;
-import static com.tomakehurst.crashlab.saboteur.PacketLoss.packetLoss;
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.tomakehurst.crashlab.saboteur.ServiceFailure.serviceFailure;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.Assert.assertThat;
@@ -53,8 +52,12 @@ public class TestScenarios {
     }
 
     @Test
-    public void should_fail_with_503_response_when_text_snippet_service_unavailable() {
+    public void should_fail_with_explanatory_message_response_when_text_snippet_service_unavailable() throws Exception {
+//        textSnippetServiceSaboteur.addFault(serviceFailure("text-snippets-down"));
 
+        Response response = http.prepareGet(GET_TEXT_URL).execute().get();
+
+        assertThat(response.getResponseBody(), containsString("Text snippets is currently unavailable"));
     }
 
     @Test
@@ -72,25 +75,14 @@ public class TestScenarios {
     }
 
     @Test
-    public void latency_should_not_exceed_1s_when_network_flaky() {
-        textSnippetServiceSaboteur.addFault(packetLoss("flaky-connection-to-text").probability(40).correlation(15));
-
-        crashLab.run(period(10, SECONDS), rate(50).per(SECONDS), httpGet(GET_TEXT_URL, "GET web resource repeatedly"));
-
-        AppMetrics appMetrics = metricsSource.fetch();
-        TimeInterval p95 = appMetrics.timer("webresources.some-text.timer").percentile95();
-        assertThat(p95, lessThan(1000, MILLISECONDS));
-    }
-
-    @Test
-    public void latency_should_not_exceed_1s_when_network_slow() {
+    public void latency_should_not_exceed_500ms_when_network_slow() {
         textSnippetServiceSaboteur.addFault(delay("text-service-slowness").delay(1, SECONDS).variance(500, MILLISECONDS));
 
         crashLab.run(period(10, SECONDS), rate(30).per(SECONDS), httpGet(GET_TEXT_URL, "GET web resource repeatedly"));
 
         AppMetrics appMetrics = metricsSource.fetch();
         TimeInterval p95 = appMetrics.timer("webresources.some-text.timer").percentile95();
-        assertThat(p95, lessThan(1000, MILLISECONDS));
+        assertThat(p95, lessThan(500, MILLISECONDS));
     }
 
     @Test(timeout = 20000)
