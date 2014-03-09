@@ -1,4 +1,4 @@
-package com.github.tomakehurst.crashtest;
+package com.github.tomakehurst.crashdummy;
 
 
 import com.codahale.metrics.annotation.Timed;
@@ -21,16 +21,16 @@ import java.io.StringWriter;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 @Path("/")
-public class CrashTestResource {
+public class CrashDummyResource {
 
-    private static final Logger log = LoggerFactory.getLogger(CrashTestResource.class);
+    private static final Logger log = LoggerFactory.getLogger(CrashDummyResource.class);
 
     private final HttpClient longTimeoutHhttpClient;
     private final HttpClient shortTimeoutHttpClient;
     private final String wireMockHost;
     private final WireMock wireMock;
 
-    public CrashTestResource(HttpClient longTimeoutHhttpClient, HttpClient shortTimeoutHttpClient, WireMock wireMock, String wireMockHost) {
+    public CrashDummyResource(HttpClient longTimeoutHhttpClient, HttpClient shortTimeoutHttpClient, WireMock wireMock, String wireMockHost) {
         this.longTimeoutHhttpClient = longTimeoutHhttpClient;
         this.shortTimeoutHttpClient = shortTimeoutHttpClient;
         this.wireMockHost = wireMockHost;

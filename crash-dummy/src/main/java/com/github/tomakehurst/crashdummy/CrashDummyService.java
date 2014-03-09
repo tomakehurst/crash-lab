@@ -1,4 +1,4 @@
-package com.github.tomakehurst.crashtest;
+package com.github.tomakehurst.crashdummy;
 
 
 import com.codahale.metrics.Histogram;
@@ -6,15 +6,15 @@ import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
-public class CrashTestService extends Application<CrashTestConfig> {
+public class CrashDummyService extends Application<CrashDummyConfig> {
 
     @Override
-    public void initialize(Bootstrap<CrashTestConfig> bootstrap) {
+    public void initialize(Bootstrap<CrashDummyConfig> bootstrap) {
     }
 
     @Override
-    public void run(CrashTestConfig configuration, Environment environment) throws Exception {
-        environment.jersey().register(new CrashTestResource(
+    public void run(CrashDummyConfig configuration, Environment environment) throws Exception {
+        environment.jersey().register(new CrashDummyResource(
                 configuration.createHttpClient(environment, "wiremock-client"),
                 configuration.createShortTimeoutHttpClient(environment, "wiremock-short-timeout-client"),
                 configuration.createWireMockClient(), configuration.getWireMockHost()
@@ -31,9 +31,9 @@ public class CrashTestService extends Application<CrashTestConfig> {
 
     public static void main(String... args) throws Exception {
         if (args.length == 0) {
-            new CrashTestService().run(new String[] { "server", "src/main/resources/crash-test.yaml" });
+            new CrashDummyService().run(new String[] { "server", "src/main/resources/crash-test.yaml" });
         } else {
-            new CrashTestService().run(args);
+            new CrashDummyService().run(args);
         }
 
     }

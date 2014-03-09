@@ -1,4 +1,4 @@
-package com.github.tomakehurst.crashtest;
+package com.github.tomakehurst.crashdummy;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.tomakehurst.wiremock.client.WireMock;
@@ -10,7 +10,7 @@ import org.apache.http.client.HttpClient;
 
 import javax.validation.constraints.NotNull;
 
-public class CrashTestConfig extends Configuration {
+public class CrashDummyConfig extends Configuration {
 
     @JsonProperty
     @NotNull
