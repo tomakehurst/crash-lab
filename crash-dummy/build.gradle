@@ -21,7 +21,7 @@ repositories {
 	mavenCentral()
 }
 
-project.buildDir = System.getProperty('java.io.tmpdir') + File.separator + 'crash-dummy-build'
+//project.buildDir = System.getProperty('java.io.tmpdir') + File.separator + 'crash-dummy-build'
 
 dependencies {
     compile 'io.dropwizard:dropwizard-core:0.7.0-rc1'

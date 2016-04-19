@@ -2,6 +2,8 @@ package com.tomakehurst.crashlab.saboteur;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+import com.google.common.net.HostAndPort;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.ListenableFuture;
 import com.ning.http.client.Response;
@@ -16,19 +18,19 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 public class SaboteurAdminClient {
 
     private final AsyncHttpClient client;
-    private final List<String> hosts;
+    private final List<HostAndPort> hosts;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public SaboteurAdminClient(AsyncHttpClient client, List<String> hosts) {
+    public SaboteurAdminClient(AsyncHttpClient client, List<HostAndPort> hostsAndPorts) {
         this.client = client;
-        this.hosts = hosts;
+        this.hosts = hostsAndPorts;
     }
 
     @SuppressWarnings("unchecked")
     public <T extends Fault> void addFault(final T fault) {
         executeRequestForAllHosts(new HttpClientAction("Add fault") {
-            public ListenableFuture<Response> doWithClient(AsyncHttpClient client, String host) throws IOException {
-                StringBuilder url = new StringBuilder().append("http://").append(host).append(":6660").append("/");
+            public ListenableFuture<Response> doWithClient(AsyncHttpClient client, String host, int port) throws IOException {
+                StringBuilder url = new StringBuilder().append("http://").append(host).append(":").append(port).append("/");
                 return client.preparePost(url.toString())
                     .setBody(objectMapper.writeValueAsBytes(fault))
                     .execute();
@@ -38,18 +40,18 @@ public class SaboteurAdminClient {
 
     public void reset() {
         executeRequestForAllHosts(new HttpClientAction("Reset") {
-            public ListenableFuture<Response> doWithClient(AsyncHttpClient client, String host) throws IOException {
-                StringBuilder url = new StringBuilder().append("http://").append(host).append(":6660").append("/");
+            public ListenableFuture<Response> doWithClient(AsyncHttpClient client, String host, int port) throws IOException {
+                StringBuilder url = new StringBuilder().append("http://").append(host).append(":").append(port).append("/");
                 return client.prepareDelete(url.toString()).execute();
             }
         });
     }
 
     private void executeRequestForAllHosts(final HttpClientAction httpClientAction) {
-        Iterable<ListenableFuture<Response>> responseFutures = transform(hosts, new Function<String, ListenableFuture<Response>>() {
-            public ListenableFuture<Response> apply(String host) {
+        Iterable<ListenableFuture<Response>> responseFutures = transform(hosts, new Function<HostAndPort, ListenableFuture<Response>>() {
+            public ListenableFuture<Response> apply(HostAndPort host) {
                 try {
-                    return httpClientAction.doWithClient(client, host);
+                    return httpClientAction.doWithClient(client, host.getHostText(), host.getPort());
                 } catch (IOException e) {
                     return throwUnchecked(e, ListenableFuture.class);
                 }
@@ -75,6 +77,6 @@ public class SaboteurAdminClient {
             this.name = name;
         }
 
-        public abstract ListenableFuture<Response> doWithClient(AsyncHttpClient client, String host) throws IOException;
+        public abstract ListenableFuture<Response> doWithClient(AsyncHttpClient client, String host, int port) throws IOException;
     }
 }

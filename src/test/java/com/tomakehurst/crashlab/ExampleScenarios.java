@@ -1,5 +1,6 @@
 package com.tomakehurst.crashlab;
 
+import com.google.common.net.HostAndPort;
 import com.ning.http.client.*;
 import com.tomakehurst.crashlab.saboteur.Saboteur;
 import com.tomakehurst.crashlab.metrics.AppMetrics;
@@ -32,7 +33,7 @@ public class ExampleScenarios {
 
     static HttpJsonAppMetricsSource metricsSource = new HttpJsonAppMetricsSource(BASE_URL + ":8081/metrics");
     static CrashLab crashLab = new CrashLab();
-    Saboteur textSnippetServiceSaboteur = Saboteur.defineClient("text-snippet-web-service", 8080, "192.168.2.12");
+    Saboteur textSnippetServiceSaboteur = Saboteur.defineClient("text-snippet-web-service", 8080, HostAndPort.fromParts("192.168.2.12", Saboteur.DEFAULT_PORT));
 
 
     @Before

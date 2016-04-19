@@ -41,3 +41,5 @@ clojure-client/pom.xml
 
 *.swp
 **/*.swp
+
+out

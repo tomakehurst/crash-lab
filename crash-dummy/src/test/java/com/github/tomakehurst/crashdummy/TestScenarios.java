@@ -1,6 +1,7 @@
 package com.github.tomakehurst.crashdummy;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
+import com.google.common.net.HostAndPort;
 import com.ning.http.client.*;
 import com.tomakehurst.crashlab.CrashLab;
 import com.tomakehurst.crashlab.HttpSteps;
@@ -53,7 +54,7 @@ public class TestScenarios {
 
     @Test
     public void should_fail_with_explanatory_message_response_when_text_snippet_service_unavailable() throws Exception {
-//        textSnippetServiceSaboteur.addFault(serviceFailure("text-snippets-down"));
+        textSnippetServiceSaboteur.addFault(serviceFailure("text-snippets-down"));
 
         Response response = http.prepareGet(GET_TEXT_URL).execute().get();
 
